@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teresa ML | Bewerbung für ADCELL</title>
+    <style>
+        :root {
+            --weare-red: #14213D;
+            --weare-black: #000000;
+            --weare-white: #FFFFFF;
+            --weare-gray: #F0F0F0;
+            --weare-dark-gray: #2A2A2A;
+            --weare-light-gray: #E0E0E0;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--weare-white);
+            color: var(--weare-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hide all page content until password is entered */
+        #page-content {
+            display: none;
+        }
+
+        /* Password Overlay */
+        #password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        #password-modal {
+            background: var(--weare-white);
+            padding: 2.5rem;
+            border-radius: 0;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #password-modal h2 {
+            color: var(--weare-black);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        #password-modal p {
+            color: var(--weare-dark-gray);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        #password-input {
+            padding: 0.75rem;
+            width: 100%;
+            border: 2px solid var(--weare-light-gray);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+
+        #password-input:focus {
+            outline: none;
+            border-color: var(--weare-red);
+        }
+
+        #password-button {
+            background-color: var(--weare-red);
+            color: var(--weare-white);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        #password-button:hover {
+            background-color: var(--weare-black);
+        }
+
+        #error-message {
+            color: var(--weare-red);
+            margin-top: 1rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        /* Top Banner */
+        .top-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--weare-dark-gray);
+            color: var(--weare-white);
+            text-align: center;
+            padding: 0.4rem 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            z-index: 1001;
+        }
+
+        /* Navigation unter dem Banner */
+        .nav-container {
+            background-color: var(--weare-red);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--weare-light-gray);
+            position: fixed;
+            top: 24px;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 0;
+            padding-left: 1rem;
+        }
+
+        .logo-line {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--weare-white);
+            text-transform: lowercase;
+            line-height: 1.1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            justify-content: flex-end;
+            margin-right: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--weare-white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.4;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+            background-color: var(--weare-white);
+            color: var(--weare-black);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--weare-dark-gray);
+            max-width: 800px;
+            text-align: justify;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 2rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--weare-black);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            text-align: left;
+            padding-left: 3rem;
+        }
+
+        .section-title.centered {
+            text-align: center;
+            padding-left: 0;
+        }
+
+        .section-title.skills-title {
+            padding-left: 3rem;
+        }
+
+        /* About Section Layout */
+        .about-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 0 3rem;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--weare-black);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            text-align: left;
+            padding-left: 0;
+        }
+
+        .about-text p {
+            text-align: justify;
+            font-size: 1rem;
+            color: var(--weare-dark-gray);
+            line-height: 1.7;
+        }
+
+        .about-gif {
+            flex: 0 0 450px;
+        }
+
+        .about-gif img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        /* Text Block */
+        .text-block {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: justify;
+            padding: 0 3rem;
+        }
+
+        /* Two-Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 0 3rem;
+        }
+
+        .column-content {
+            padding: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .column-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--weare-black);
+        }
+
+        .column-content p {
+            font-size: 1rem;
+            color: var(--weare-dark-gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        /* Skill Cards */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 0 3rem;
+        }
+
+        .skill-card {
+            background-color: var(--weare-red);
+            color: var(--weare-white);
+            padding: 1.5rem;
+            border-radius: 0;
+            text-align: left;
+        }
+
+        .skill-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: left;
+        }
+
+        .skill-card p {
+            text-align: justify;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--weare-white);
+        }
+
+        /* Marquee Banner */
+        .marquee-container {
+            background-color: var(--weare-dark-gray);
+            color: var(--weare-white);
+            padding: 1rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            margin-top: 2rem;
+            border-radius: 0;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .marquee-content span {
+            font-family: var(--font-main);
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            margin-right: 3rem;
+            color: var(--weare-white);
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--weare-light-gray);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--weare-red);
+            border: 2px solid var(--weare-white);
+        }
+
+        .timeline-item h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--weare-black);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .timeline-item .period {
+            font-size: 0.85rem;
+            color: var(--weare-red);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .timeline-item p {
+            text-align: justify;
+            font-size: 0.95rem;
+            color: var(--weare-dark-gray);
+            line-height: 1.7;
+        }
+
+        .timeline-item ul {
+            list-style-type: none;
+            padding-left: 0;
+            text-align: justify;
+        }
+
+        .timeline-item li {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--weare-dark-gray);
+            line-height: 1.7;
+        }
+
+        /* GIF Style */
+        .gif-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .gif-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background-color: var(--weare-red);
+            color: var(--weare-white);
+            padding: 0.8rem 2rem;
+            border-radius: 0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-button:hover {
+            background-color: var(--weare-black);
+        }
+
+        /* Motivation Section */
+        .motivation-section {
+            text-align: center;
+            padding: 0 3rem;
+        }
+
+        .motivation-section p {
+            text-align: justify;
+            font-size: 1.1rem;
+            color: var(--weare-dark-gray);
+            line-height: 1.7;
+        }
+
+        .motivation-section strong {
+            display: block;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+        }
+
+        .cta-gif {
+            text-align: center;
+        }
+
+        .cta-gif img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .cta-text {
+            text-align: center;
+        }
+
+        .cta-text h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--weare-black);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .cta-text p {
+            font-size: 1.1rem;
+            color: var(--weare-dark-gray);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--weare-red);
+            color: var(--weare-white);
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+            color: var(--weare-white);
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #password-modal {
+                padding: 2rem 1.5rem;
+                width: 95%;
+            }
+
+            .nav-container {
+                padding: 0.5rem 0;
+                top: 24px;
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+
+            .logo-container {
+                margin-left: 0;
+                padding-left: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .nav-links {
+                margin-right: 1rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+                justify-content: flex-start;
+                width: 100%;
+            }
+
+            .about-content {
+                flex-direction: column;
+                padding: 0 1.5rem;
+            }
+
+            .about-gif {
+                flex: 1;
+                margin-top: 1.5rem;
+            }
+
+            .hero {
+                padding: 4rem 1.5rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            section {
+                padding: 2rem 0;
+            }
+
+            .section-title {
+                padding-left: 1.5rem;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1.5rem;
+            }
+
+            .text-block {
+                padding: 0 1.5rem;
+            }
+
+            .timeline {
+                padding-left: 1rem;
+            }
+
+            .cta-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 4rem 1.5rem;
+            }
+
+            .cta-gif {
+                order: -1;
+            }
+
+            .motivation-section {
+                padding: 0 1.5rem;
+            }
+
+            .cta-text p {
+                text-align: center;
+            }
+
+            .motivation-section p {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Protection Overlay -->
+    <div id="password-overlay">
+        <div id="password-modal">
+            <h2>Passwort geschützt</h2>
+            <p>Bitte geben Sie das Passwort ein, um Zugriff zu erhalten:</p>
+            <input type="password" id="password-input" placeholder="Passwort eingeben" autofocus>
+            <button id="password-button">let's go! 🤍</button>
+            <p id="error-message">Falsches Passwort! Bitte versuchen Sie es erneut.</p>
+        </div>
+    </div>
+
+    <!-- Page Content Container - Hidden until password is correct -->
+    <div id="page-content">
+        <!-- Top Banner -->
+        <div class="top-banner">
+            <span>New 🔥 Application</span>
+        </div>
+
+        <!-- Navigation unter dem Banner -->
+        <nav class="nav-container">
+            <div class="logo-container">
+                <span class="logo-line">ad</span>
+                <span class="logo-line">cell</span>
+            </div>
+            <div class="nav-links">
+                <a href="#about">Über diese Website</a>
+                <a href="#education">Ausbildung</a>
+                <a href="#experience">Erfahrung</a>
+                <a href="#skills">Fähigkeiten</a>
+                <a href="#motivation">Why me?</a>
+                <a href="#contact">LinkedIn</a>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Bewerbung für die Stelle Trainee (m/w/d) im Bereich Online-Marketing/E-Commerce</h1>
+                <p>
+                    Betriebswirtin B.A. mit den Vertiefungen Marketing & Entrepreneurship und abgeschlossener Weiterbildung in Data Analytics. Ich verbinde wirtschaftliches, analytisches Denken mit Spaß an Kommunikation, Kampagnen und E-Commerce.
+                </p>
+            </section>
+
+            <!-- About Section -->
+            <section id="about">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>Über diese Website</h2>
+                        <p>
+                           Hallo ADCELL Team,<br><br>
+                           auf die Stelle als Trainee im Bereich Online-Marketing/E-Commerce habe ich mich auf dem klassischen Weg beworben – und zusätzlich einen Weg gewählt, der zeigt, wie ich arbeite: eigenständig, technikaffin und ergebnisorientiert. Auf Basis meiner Weiterbildung in Data Analytics habe ich meine Skills um Vibe Coding erweitert und diese Website gebaut, um euch einen lebendigen Eindruck von mir zu geben.<br><br>
+                            <strong>#herewego 👩🏻‍💻</strong>
+                        </p>
+                    </div>
+                    <div class="about-gif">
+                        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZms1bGFwbGthOWZpbnk3MTZ4a2o4cndtcmhoc3JhbDhhaTBpaDd6cCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/JIX9t2j0ZTN9S/giphy.gif" alt="Coding GIF">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section id="education">
+                <h2 class="section-title">Ausbildung</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>SPICED Academy</h4>
+                        <p class="period">Data Analyst (Trainee) | 2025 - 2026</p>
+                        <p>
+                            Vollzeit-Weiterbildung in Englisch. Datenanalyse und -aufbereitung mit Python, SQL und Pandas, Datenvisualisierung in Tableau.
+                        </p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Hochschule für Technik und Wirtschaft Berlin</h4>
+                        <p class="period">Bachelor of Arts (BWL) | 2017 - 2025</p>
+                        <p>
+                            Schwerpunkt: Marketing & Entrepreneurship. Bachelorarbeit: „Die Auswirkungen von K.I. im Marketing“.
+                        </p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Victor-Klemperer-Kolleg</h4>
+                        <p class="period">Fachhochschulreife | 2015 - 2017</p>
+                        <p>
+                            Wahlfächer: Englisch & Spanisch, Philosophie.
+                        </p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>OSZ Ästhetik und Technik / Atelier Reisenweber</h4>
+                        <p class="period">Gesellin im Friseurhandwerk | 2009 - 2013</p>
+                        <p>
+                            Ausbildung zur Friseurin.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experience Section -->
+            <section id="experience">
+                <h2 class="section-title">Erfahrung</h2>
+                <div class="timeline">
+                    <!-- SPICED Academy -->
+                    <div class="timeline-item">
+                        <h4>SPICED Academy</h4>
+                        <p class="period">Data Analytics Trainee | 09/2025 - 02/2026</p>
+                        <ul>
+                            <li>Datenanalyse und -aufbereitung mit Python, SQL und Pandas, inklusive statistischer Grundrechenarten.</li>
+                            <li>Erstellung interaktiver Dashboards in Tableau.</li>
+                            <li>Eigenständige Umsetzung von Analyseprojekten von der Fragestellung bis zur finalen Präsentation.</li>
+                            <li>Verständliche Aufbereitung von Erkenntnissen und Ableitung von Handlungsempfehlungen.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Bachelorarbeit -->
+                    <div class="timeline-item">
+                        <h4>Verfassen der Bachelorarbeit</h4>
+                        <p class="period">„Die Auswirkungen von K.I. im Marketing“ | 04/2025 - 07/2025</p>
+                        <ul>
+                            <li>Analyse von Einsatzmöglichkeiten der KI, u. a. in der Marktforschung für eine optimierte Produktentwicklung.</li>
+                            <li>Datenschutz und Datenmanagement als Voraussetzung, um aus vorhandenen Daten nützliche Informationen zu gewinnen.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Bevermann Sales -->
+                    <div class="timeline-item">
+                        <h4>Bevermann Sales</h4>
+                        <p class="period">Praktikantin | 04/2025 - 11/2025</p>
+                        <ul>
+                            <li>Tägliche Arbeit mit CRM-System: Pflege von Kundendaten und Dokumentation von Vertriebsprozessen.</li>
+                            <li>Selbstständige Analyse und Identifikation von Entscheidern im B2B-Bereich (Kaltakquise).</li>
+                            <li>Branchenrecherche zu Markt und Produkt (Asset-Management, Payroll-Management, Kreislaufwirtschaft).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Le Jardin -->
+                    <div class="timeline-item">
+                        <h4>Le Jardin</h4>
+                        <p class="period">Sales & Event Managerin | 01/2024 - 10/2024</p>
+                        <ul>
+                            <li>Eigenständige Konzeption des Newsletters.</li>
+                            <li>Planung und Umsetzung von B2C- und B2B-Events mit bis zu 300 Gästen inkl. Vertragsverhandlungen und Budgetierung.</li>
+                            <li>Koordination interner Teams sowie externer Partner (Techniker, Sponsoren, Caterer).</li>
+                            <li>Mitwirkung bei der Content-Erstellung für soziale Medien und die Fachzeitschrift <i>Gastivo</i>.</li>
+                            <li>Eigeninitiierte Wettbewerbsanalyse zur Optimierung von Preisen und Positionierung.</li>
+                        </ul>
+                    </div>
+
+                    <!-- sonneco -->
+                    <div class="timeline-item">
+                        <h4>sonneco</h4>
+                        <p class="period">Praktikantin | 11/2022 - 03/2023</p>
+                        <ul>
+                            <li>Vertrieb mit Schwerpunkt Erstansprache von B2B- und B2G-Partnern.</li>
+                            <li>Eigenständige Vorbereitung, Durchführung und Nachbereitung von Gesprächen mit Wirtschaftsvertretern aus Italien, der Schweiz und Belgien im Rahmen der europaweiten Expansionsvorbereitung.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills">
+                <h2 class="section-title skills-title">Fähigkeiten</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3>Fachliches Wissen durch mein Studium</h3>
+                        <p>
+                            Die Kurse Marketing und Entrepreneurship haben mir den Denkansatz vermittelt: Wo stehen wir, wo wollen wir hin, und was muss dafür getan werden? Und wie dieser praktisch, agil z.B. mit der scrum-Methode umgesetzt wird. Diese Entscheidungen will ich nicht nur auf Basis eines Bauchgefühls oder Meinung treffen, sondern auch Daten nutzen, die dafür zur Verfügung stehen.
+                        </p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Neugier & Lernbereitschaft</h3>
+                        <p>
+                            Um den Anforderungen einer digitalen Welt gerecht zu werden, absolvierte ich im Anschluss an mein Studium eine Weiterbildung in Data Analytics. Dort lernte ich mit der Ressource Data zu arbeiten und Erkenntnisse aus dieser zu gewinnen. Danach habe ich mich in Git und Webhosting eingearbeitet und diese Website gebaut. Und vor ein paar Wochen trat ich einem Schachclub bei.
+                        </p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Kommunikation & Akquise</h3>
+                        <p>
+                            Kaltakquise im B2B-Bereich bei Bevermann Sales, Erstansprache von B2B- und B2G-Partnern bei sonneco, internationale Gespräche mit Wirtschaftsvertretern aus Italien, der Schweiz und Belgien – Kommunikation ist mein tägliches Werkzeug, auf Deutsch und Englisch.
+                        </p>
+                    </div>
+                    <div class="skill-card">
+                        <h3>Kreativität</h3>
+                        <p>
+                            Die Wörter analytisch und kreativ sind bei mir kein „entweder, oder“. Neben schnellen kreativen Problemlösungen aus dem Eventmanagement habe ich den Newsletter bei Le Jardin eigenständig konzipiert und multimedialen Content für Social Media erstellt. Privat verwirkliche ich meine Kreativität in der analogen Fotografie und abstrakter Malerei.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Marquee Banner -->
+                <div class="marquee-container">
+                    <div class="marquee-content">
+                        <span>📊 Tableau</span>
+                        <span>🗃️ SQL</span>
+                        <span>🐍 Python</span>
+                        <span>📋 Datenanalyse</span>
+                        <span>🤝 Customer Relationship Management</span>
+                        <span>📋 Projektmanagement</span>
+                        <span>✉️ Newsletter-Konzeption</span>
+                        <span>🌍 English Fließend</span>
+                        <span>🤔 Neugierig</span>
+                        <span>📊 Tableau</span>
+                        <span>🗃️ SQL</span>
+                        <span>🐍 Python</span>
+                        <span>📋 Datenanalyse</span>
+                        <span>🤝 Customer Relationship Management</span>
+                        <span>📋 Projektmanagement</span>
+                        <span>✉️ Newsletter-Konzeption</span>
+                        <span>🌍 English Fließend</span>
+                        <span>🤔 Neugierig</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Motivation Section -->
+            <section id="motivation" class="motivation-section">
+                <h2 class="section-title centered">Why me?</h2>
+                <p>
+                    <strong>Betriebswirtin. Data Analyst. Optimist.</strong>
+                    <br><br>
+                    Ich bin keine klassische Absolventin die nur Theorie kann und keine Quereinsteigerin ohne Background. Ich verbinde akademisches Wissen, analytische Fähigkeiten und langjährige praktische Erfahrung, unter anderem direkt am Kunden, am Menschen. Ich will Neues lernen, meine Fähigkeiten kombinieren und Dinge entdecken, online wie offline.
+                </p>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section">
+                <div class="cta-gif">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXJmNzE4cXoycHQ4Ym51a2oybm1yZ3JocjB6azRsZHhvaTh1MjFscyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yPhqlJccIOaru/giphy.gif" alt="CTA GIF Left">
+                </div>
+                <div class="cta-text">
+                    <h2>Hit me up!</h2>
+                    <p>Ich freue mich darauf, <strong>ADCELL</strong> bei einem Gespräch kennenzulernen und mehr über die Stelle zu erfahren.</p>
+                </div>
+                <div class="cta-gif">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHEyb25lZGM2Y3QwZnFycXF1bDdweTYwejFxd2Z5NWFxaTQyMWZleCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l41m5YJ56zcextOSY/giphy.gif" alt="CTA GIF Right">
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Bewerbung für ADCELL</p>
+        </footer>
+    </div>
+
+    <script>
+        // Passwort-Schutz
+        const correctPassword = 'adcell';
+        const passwordOverlay = document.getElementById('password-overlay');
+        const pageContent = document.getElementById('page-content');
+
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const errorMessage = document.getElementById('error-message');
+
+            if (input.value === correctPassword) {
+                passwordOverlay.style.display = 'none';
+                pageContent.style.display = 'block';
+                // Speichere in sessionStorage, dass Passwort bereits eingegeben wurde
+                sessionStorage.setItem('passwordEntered', 'true');
+            } else {
+                errorMessage.style.display = 'block';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        // Event Listener für Button und Enter-Taste
+        document.getElementById('password-button').addEventListener('click', checkPassword);
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // Prüfe beim Laden der Seite, ob Passwort bereits in dieser Session eingegeben wurde
+        window.addEventListener('DOMContentLoaded', function() {
+            // Wenn Passwort bereits in dieser Session eingegeben wurde, zeige direkt die Seite
+            if (sessionStorage.getItem('passwordEntered') === 'true') {
+                passwordOverlay.style.display = 'none';
+                pageContent.style.display = 'block';
+            } else {
+                // Sonst zeige das Passwort-Overlay
+                passwordOverlay.style.display = 'flex';
+                pageContent.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
